@@ -34,14 +34,15 @@ const cards = [
 ];
 
 const cards_container = document.querySelector('.js-cards_container');
+let hasFlipped = false;
+let playing = false;
+let firstCard, secondCard;
 
-const renderItems = (cards) => {
-    let fragment = document.createDocumentFragment();
-    cards.forEach((card) => {
-        const block = document.createElement('div');
-        block.classList.add('flip-container');
-        block.innerHTML = `
-            <div class="flipper">
+const createItem = (card) => {
+    const block = document.createElement('div');
+    block.classList.add('flip-container');
+    block.innerHTML = `
+            <div class="flipper card" data-id="${card.id}">
                 <div class="front">
                     <img src="images/card-front.jfif" alt="card-front">
                 </div>
@@ -50,16 +51,54 @@ const renderItems = (cards) => {
                 </div>
             </div>
         `;
+    return block;
+}
+
+const renderItems = (cards) => {
+    let fragment = document.createDocumentFragment();
+    cards.forEach((card) => {
+        let block = createItem(card);
         fragment.appendChild(block);
     })
     cards_container.appendChild(fragment);
 }
 
+const flipCard = (target) => {
+    if (target.classList.value === 'flipper card') {
+        target.classList.add('flipped');
+        if (!hasFlipped) {
+            hasFlipped = true;
+            firstCard = target;
+        } else {
+            hasFlipped = false;
+            secondCard = target;
+            if (firstCard.dataset.id === secondCard.dataset.id) {
+                wrongCards();
+            } else {
+                rightCards();
+            }
+        }
+    }
+}
+
+const wrongCards = () => {
+    firstCard.classList.remove('card');
+    secondCard.classList.remove('card');
+}
+
+const rightCards = () => {
+    playing = true;
+    setTimeout(() => {
+        firstCard.classList.remove('flipped');
+        secondCard.classList.remove('flipped');
+        playing = false;
+    }, 500);
+}
+
 cards_container.addEventListener('click', (event) => {
     const target = event.target;
-    if (target.classList.value === 'flipper') {
-        target.style.transform = 'rotateY(180deg)';
-    }
+    if (playing) return;
+    flipCard(target);
 })
 
 const newArray = [...cards, ...cards].sort(() => 0.2 - Math.random());
