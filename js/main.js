@@ -1,39 +1,39 @@
 const cards = [
     {
         id: 1,
-        img: 'images/1.jfif'
+        img: 'images/card1.jfif'
     },
     {
         id: 2,
-        img: 'images/2.jfif'
+        img: 'images/card2.jfif'
     },
     {
         id: 3,
-        img: 'images/3.jfif'
+        img: 'images/card3.jfif'
     },
     {
         id: 4,
-        img: 'images/4.jfif'
+        img: 'images/card4.jfif'
     },
     {
         id: 5,
-        img: 'images/5.jfif'
+        img: 'images/card5.jfif'
     },
     {
         id: 6,
-        img: 'images/6.jfif'
+        img: 'images/card6.jfif'
     },
     {
         id: 7,
-        img: 'images/7.jfif'
+        img: 'images/card7.jfif'
     },
     {
         id: 8,
-        img: 'images/8.jfif'
+        img: 'images/card8.jfif'
     }
 ];
-
 const cards_container = document.querySelector('.js-cards_container');
+let step = 0;
 let hasFlipped = false;
 let playing = false;
 let firstCard, secondCard;
@@ -73,20 +73,26 @@ const flipCard = (target) => {
             hasFlipped = false;
             secondCard = target;
             if (firstCard.dataset.id === secondCard.dataset.id) {
-                wrongCards();
-            } else {
                 rightCards();
+                setTimeout(() => {
+                    if (step === 8) {
+                        alert('Вы победили!');
+                    }
+                }, 300);
+            } else {
+                wrongCards();
             }
         }
     }
 }
 
-const wrongCards = () => {
+const rightCards = () => {
     firstCard.classList.remove('card');
     secondCard.classList.remove('card');
+    step++;
 }
 
-const rightCards = () => {
+const wrongCards = () => {
     playing = true;
     setTimeout(() => {
         firstCard.classList.remove('flipped');
@@ -95,12 +101,13 @@ const rightCards = () => {
     }, 500);
 }
 
-cards_container.addEventListener('click', (event) => {
-    const target = event.target;
-    if (playing) return;
-    flipCard(target);
-})
+window.onload = () => {
+    cards_container.addEventListener('click', (event) => {
+        const target = event.target;
+        if (playing) return;
+        flipCard(target);
+    })
 
-const newArray = [...cards, ...cards].sort(() => 0.2 - Math.random());
-
-renderItems(newArray);
+    const newArray = [...cards, ...cards].sort(() => 0.2 - Math.random());
+    renderItems(newArray);
+}
