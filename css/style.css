@@ -12,6 +12,7 @@
 /* Cards */
 
 .cards {
+    cursor: pointer;
     display: flex;
     flex-wrap: wrap;
     margin-top: 30px;
@@ -67,4 +68,5 @@
 
 .flipped {
     transform: rotateY(180deg);
+    cursor: default;
 }
